@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "lumina": {
+      "type": "http",
+      "url": "https://app.luminalabs.sh/api/mcp",
+      "headers": { "Authorization": "Bearer ${LUMINA_API_KEY}" }
+    }
+  }
+}

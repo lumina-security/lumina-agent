@@ -1,0 +1,10 @@
+{
+  "name": "lumina",
+  "version": "1.0.0",
+  "description": "Fix and triage the vulnerabilities Lumina found, and follow your penetration tests. Needs LUMINA_API_KEY.",
+  "author": { "name": "Lumina", "url": "https://luminalabs.sh" },
+  "homepage": "https://luminalabs.sh",
+  "repository": "https://github.com/lumina-security/lumina-agent",
+  "license": "MIT",
+  "keywords": ["security", "pentest", "vulnerabilities", "mcp"]
+}

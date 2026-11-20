@@ -1,0 +1,13 @@
+{
+  "name": "lumina",
+  "owner": { "name": "Lumina", "url": "https://luminalabs.sh" },
+  "metadata": { "description": "Lumina, AI penetration testing, in your coding agent" },
+  "plugins": [
+    {
+      "name": "lumina",
+      "source": "./plugins/lumina",
+      "description": "Fix and triage the vulnerabilities Lumina found, and follow your penetration tests, from Claude Code.",
+      "category": "security"
+    }
+  ]
+}
