@@ -49,10 +49,12 @@ Work most severe first. Batch fixes in one change when they touch the same code,
 
 ## Setup
 
-You need an **API key** from Lumina: an organization owner creates one under **Organization → API** (leave "Can start and stop tests" off for an agent) and puts it in the environment as `LUMINA_API_KEY`. Never paste the key into a chat or commit it.
+The MCP server is `https://app.luminalabs.sh/api/mcp` (Streamable HTTP). There's no key to copy: the first time, the client opens Lumina in the browser, the user signs in and approves, and the agent then acts as that user, reading and triaging only.
 
-The MCP server is `https://app.luminalabs.sh/api/mcp` (Streamable HTTP), authenticated with `Authorization: Bearer <key>`.
+- **Claude Code**: install the plugin (`/plugin marketplace add lumina-security/lumina-agent`, then `/plugin install lumina@lumina`) or add the server alone (`claude mcp add --transport http lumina https://app.luminalabs.sh/api/mcp`). Then run `/mcp`, choose lumina and sign in.
+- **Cursor** (`.cursor/mcp.json`), **VS Code** (`.vscode/mcp.json`, key `servers`, `"type": "http"`), **claude.ai** and **ChatGPT** connectors: an HTTP server with the URL above. They open the sign-in themselves.
+- **Codex** (`~/.codex/config.toml`): `[mcp_servers.lumina]` with `url = "https://app.luminalabs.sh/api/mcp"`, then `codex mcp login lumina`.
 
-- **Claude Code**: `claude mcp add --transport http lumina https://app.luminalabs.sh/api/mcp --header "Authorization: Bearer $LUMINA_API_KEY"`, or install the plugin: `/plugin marketplace add lumina-security/lumina-agent` then `/plugin install lumina@lumina`.
-- **Cursor** (`.cursor/mcp.json`), **VS Code** (`.vscode/mcp.json`, key `servers`) and others: an HTTP server with the URL above and the header `Authorization: Bearer ${env:LUMINA_API_KEY}`.
-- **Codex** (`~/.codex/config.toml`): `[mcp_servers.lumina]` with `url = "https://app.luminalabs.sh/api/mcp"` and `bearer_token_env_var = "LUMINA_API_KEY"`.
+For a client without MCP sign-in, or an agent that runs unattended (CI), an organization owner creates an **API key** under **Organization → API** (leave "Can start and stop tests" off) and the client sends `Authorization: Bearer <key>`, read from an environment variable such as `LUMINA_API_KEY` (Codex: `bearer_token_env_var = "LUMINA_API_KEY"`). Never paste a key into a chat or commit it.
+
+If a tool answers 401, the sign-in expired or was disconnected in Lumina (Organization → API): ask the user to sign in again (in Claude Code, `/mcp`).

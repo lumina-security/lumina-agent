@@ -5,17 +5,7 @@
 - **MCP server** `https://app.luminalabs.sh/api/mcp`: your agent lists open issues, reads each one in full (proof of concept, code locations, proposed fix), fixes the code and marks it resolved for the next test to confirm. It can snooze or ignore issues and follow running tests. It never starts a test: it hands you a link to approve the test and its price.
 - **Skill** [`plugins/lumina/skills/lumina/SKILL.md`](plugins/lumina/skills/lumina/SKILL.md): how the agent fixes, triages and follows tests safely.
 
-## 1. Create an API key
-
-In Lumina, an organization owner opens **Organization → API** and creates a key. Leave **Can start and stop tests** off: an agent only reads and triages. Put the key in your environment:
-
-```sh
-export LUMINA_API_KEY=lum_…
-```
-
-Never commit the key or paste it into a chat.
-
-## 2. Connect your agent
+## 1. Connect your agent
 
 **Claude Code** (server and skill):
 
@@ -24,32 +14,43 @@ Never commit the key or paste it into a chat.
 /plugin install lumina@lumina
 ```
 
-Or the server alone: `claude mcp add --transport http lumina https://app.luminalabs.sh/api/mcp --header "Authorization: Bearer $LUMINA_API_KEY"`
+Then run `/mcp`, choose **lumina** and sign in: Lumina opens in your browser and asks you to approve. There's no key to copy. Your agent then acts as you, reading and triaging only; disconnect it any time in Lumina, **Organization → API**.
 
-**Cursor** (`.cursor/mcp.json`), and most other clients:
+Or the server alone: `claude mcp add --transport http lumina https://app.luminalabs.sh/api/mcp`
+
+**Cursor** (`.cursor/mcp.json`), and most other clients, open the same sign-in:
 
 ```json
 {
   "mcpServers": {
-    "lumina": {
-      "url": "https://app.luminalabs.sh/api/mcp",
-      "headers": { "Authorization": "Bearer ${env:LUMINA_API_KEY}" }
-    }
+    "lumina": { "url": "https://app.luminalabs.sh/api/mcp" }
   }
 }
 ```
 
 **VS Code** (`.vscode/mcp.json`): the same under `"servers"`, with `"type": "http"`.
 
-**Codex** (`~/.codex/config.toml`):
+**claude.ai** and **ChatGPT**: add a custom connector with the URL `https://app.luminalabs.sh/api/mcp`.
+
+**Codex** (`~/.codex/config.toml`), then `codex mcp login lumina`:
 
 ```toml
 [mcp_servers.lumina]
 url = "https://app.luminalabs.sh/api/mcp"
-bearer_token_env_var = "LUMINA_API_KEY"
 ```
 
 For agents that support skills, copy [`SKILL.md`](plugins/lumina/skills/lumina/SKILL.md) into their skills folder (for example `.claude/skills/lumina/SKILL.md` or `~/.codex/skills/lumina/SKILL.md`).
+
+## 2. Or use an API key
+
+For a client without MCP sign-in, or an agent that runs unattended (CI): an organization owner creates a key in Lumina under **Organization → API**, with **Can start and stop tests** off. Put it in your environment and send it as a header:
+
+```sh
+export LUMINA_API_KEY=lum_…
+claude mcp add --transport http lumina https://app.luminalabs.sh/api/mcp --header "Authorization: Bearer $LUMINA_API_KEY"
+```
+
+Never commit the key or paste it into a chat.
 
 ## 3. Ask
 
